@@ -23,9 +23,10 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const title = String(form.get("title"));
   const year = Number(form.get("year"));
+  const price = Number(form.get("price"));
   const authorId = Number(form.get("authorId"));
 
-  if (!title || !year || !authorId) {
+  if (!title || !year || !authorId || isNaN(price)) {
     throw new Response("Invalid form submission", { status: 400 });
   }
 
@@ -33,6 +34,7 @@ export async function action({ request }: ActionFunctionArgs) {
     data: {
       title,
       year,
+      price,
       author: { connect: { id: authorId } },
     },
   });
@@ -59,6 +61,11 @@ export default function NewBookPage() {
             <div>
               <Label htmlFor="year">Yil</Label>
               <Input type="number" id="year" name="year" required />
+            </div>
+
+            <div>
+              <Label htmlFor="price">Narx</Label>
+              <Input type="number" step="0.01" id="price" name="price" required />
             </div>
 
             <div>

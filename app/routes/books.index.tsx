@@ -8,6 +8,7 @@ type Book = {
   id: number;
   title: string;
   year: number;
+  price: number;
   author?: { name?: string | null } | null;
 };
 
@@ -36,16 +37,21 @@ export default function BooksPage() {
       <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
         {books.map((book: Book) => (
           <Card key={book.id}>
-            <CardHeader>
-              <CardTitle className="text-xl font-semibold">{book.title}</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                {book.author?.name || "Unknown Author"} ({book.year})
-              </p>
-            </CardHeader>
-            <CardContent className="flex justify-end gap-2">
-              <Link to={`/books/${book.id}/edit`}>
-                <Button variant="outline" size="sm">Edit</Button>
-              </Link>
+          <CardHeader>
+            <CardTitle className="text-xl font-semibold">{book.title}</CardTitle>
+            <p className="text-sm text-muted-foreground">
+              {book.author?.name || "Unknown Author"} ({book.year})
+            </p>
+            <p className="text-sm">${'{'}book.price{'}'}</p>
+          </CardHeader>
+          <CardContent className="flex justify-end gap-2">
+            <fetcher.Form method="post" action="/cart/add">
+              <input type="hidden" name="bookId" value={book.id} />
+              <Button variant="outline" size="sm">Add to Cart</Button>
+            </fetcher.Form>
+            <Link to={`/books/${book.id}/edit`}>
+              <Button variant="outline" size="sm">Edit</Button>
+            </Link>
               <fetcher.Form method="post" action={`/books/${book.id}/delete`}>
                 <input type="hidden" name="_method" value="delete" />
                 <Button variant="destructive" size="sm">Delete</Button>

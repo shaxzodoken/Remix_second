@@ -11,6 +11,8 @@ export default function Navbar({ user }: NavbarProps) {
   const navItems = [
     { path: "/books", label: "Books" },
     { path: "/authors", label: "Authors" },
+    { path: "/cart", label: "Cart" },
+    { path: "/orders", label: "Orders" },
     { path: "/", label: "Home" },
   ];
 

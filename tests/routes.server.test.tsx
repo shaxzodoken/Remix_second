@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react';
 vi.mock('~/lib/prisma.server', () => {
   const data = {
     authors: [{ id: 1, name: 'A' }],
-    books: [{ id: 1, title: 'T', year: 2020, authorId: 1, author: { id:1, name:'A'} }]
+    books: [{ id: 1, title: 'T', year: 2020, price: 10, authorId: 1, author: { id:1, name:'A'} }]
   };
   return {
     prisma: {
@@ -91,7 +91,7 @@ describe('books loader', () => {
 describe('books page', () => {
   it('renders list', async () => {
     const react = require('@remix-run/react');
-    vi.spyOn(react, 'useLoaderData').mockReturnValue({ books: [{ id: 1, title: 'R', year: 2021, author: { name: 'A' } }] } as any);
+    vi.spyOn(react, 'useLoaderData').mockReturnValue({ books: [{ id: 1, title: 'R', year: 2021, price: 5, author: { name: 'A' } }] } as any);
     const mod = await import('~/routes/books.index');
     const Page = mod.default;
     const router = require('react-router-dom').createMemoryRouter([
@@ -110,7 +110,7 @@ describe('create book action', () => {
     const action = mod.action;
     const req = new Request('http://test', {
       method: 'POST',
-      body: new URLSearchParams({ title: 'Book', year: '2024', authorId: '1' }).toString(),
+      body: new URLSearchParams({ title: 'Book', year: '2024', price: '9.99', authorId: '1' }).toString(),
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     });
     await action({ request: req } as any);
