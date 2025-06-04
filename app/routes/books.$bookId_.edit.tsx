@@ -1,6 +1,10 @@
 // app/routes/books.$bookId.edit.tsx
 import { json, redirect } from "@remix-run/node";
 import type { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node";
+type Author = {
+  id: number;
+  name: string;
+};
 import { useLoaderData, Form } from "@remix-run/react";
 import { prisma } from "~/lib/prisma.server";
 import { Input } from "~/components/ui/input";
@@ -65,7 +69,7 @@ export default function EditBookPage() {
                 required
               >
                 <option value="">Select Author</option>
-                {authors.map((author) => (
+                {authors.map((author: Author) => (
                   <option key={author.id} value={author.id}>
                     {author.name}
                   </option>

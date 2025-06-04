@@ -1,12 +1,17 @@
 // app/routes/books.index.tsx
 import { Link, useFetcher, useLoaderData } from "@remix-run/react";
-import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { prisma } from "~/lib/prisma.server";
+type Book = {
+  id: number;
+  title: string;
+  year: number;
+  author?: { name?: string | null } | null;
+};
 
-export async function loader({}: LoaderFunctionArgs) {
+export async function loader() {
   const books = await prisma.book.findMany({
     orderBy: { id: "asc" },
     include: { author: true }, // ✅ Author maʼlumotini olib kelamiz
@@ -29,7 +34,7 @@ export default function BooksPage() {
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-        {books.map((book) => (
+        {books.map((book: Book) => (
           <Card key={book.id}>
             <CardHeader>
               <CardTitle className="text-xl font-semibold">{book.title}</CardTitle>

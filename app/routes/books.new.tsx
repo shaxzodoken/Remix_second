@@ -1,13 +1,17 @@
 import { json, redirect } from "@remix-run/node";
-import type { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs } from "@remix-run/node";
 import { useLoaderData, Form } from "@remix-run/react";
 import { prisma } from "~/lib/prisma.server";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+type Author = {
+  id: number;
+  name: string;
+};
 
-export async function loader({}: LoaderFunctionArgs) {
+export async function loader() {
   const authors = await prisma.author.findMany({
     orderBy: { name: "asc" },
   });
@@ -61,7 +65,7 @@ export default function NewBookPage() {
               <Label htmlFor="authorId">Muallif</Label>
               <select name="authorId" id="authorId" className="w-full border rounded p-2" required>
                 <option value="">Muallifni tanlang</option>
-                {authors.map((author) => (
+                {authors.map((author: Author) => (
                   <option key={author.id} value={author.id}>
                     {author.name}
                   </option>
