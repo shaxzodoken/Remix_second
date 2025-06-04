@@ -34,6 +34,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
     data: {
       title: String(form.get("title")),
       year: Number(form.get("year")),
+      price: Number(form.get("price")),
       authorId: Number(form.get("authorId")), // e'tibor bering
     },
   });
@@ -80,6 +81,11 @@ export default function EditBookPage() {
             <div>
               <Label htmlFor="year">Year</Label>
               <Input name="year" id="year" defaultValue={book.year} type="number" required />
+            </div>
+
+            <div>
+              <Label htmlFor="price">Price</Label>
+              <Input name="price" id="price" defaultValue={book.price} type="number" step="0.01" required />
             </div>
 
             <div className="flex justify-end">
