@@ -13,7 +13,7 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body className="bg-gray-100 text-gray-900">
+      <body className="bg-gray-100 text-gray-900 pt-16">
         <Navbar />
         <main className="p-6">
           <Outlet />
