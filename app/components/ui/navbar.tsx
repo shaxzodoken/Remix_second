@@ -1,6 +1,10 @@
 import { Link, useLocation } from "@remix-run/react";
+import type { User } from "@prisma/client";
 
-export default function Navbar() {
+type NavbarProps = {
+  user: User | null;
+};
+export default function Navbar({ user }: NavbarProps) {
   const location = useLocation();
   const currentPath = location.pathname;
 
@@ -14,7 +18,7 @@ export default function Navbar() {
     <nav className="bg-gray-900 text-white px-6 py-4 shadow">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         <div className="font-bold text-lg">📚 Remix Library</div>
-        <ul className="flex space-x-6">
+        <ul className="flex space-x-6 items-center">
           {navItems.map((item) => (
             <li key={item.path}>
               <Link
@@ -27,6 +31,21 @@ export default function Navbar() {
               </Link>
             </li>
           ))}
+          {user ? (
+            <li>
+              <form action="/logout" method="post">
+                <button type="submit" className="hover:underline">
+                  Logout
+                </button>
+              </form>
+            </li>
+          ) : (
+            <li>
+              <Link to="/login" className="hover:underline">
+                Login
+              </Link>
+            </li>
+          )}
         </ul>
       </div>
     </nav>
