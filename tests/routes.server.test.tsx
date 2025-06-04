@@ -8,8 +8,7 @@ vi.mock('~/utils/session.server', () => ({
 vi.mock('~/lib/prisma.server', () => {
   const data = {
     authors: [{ id: 1, name: 'A' }],
-    books: [{ id: 1, title: 'T', year: 2020, price: 10, authorId: 1, author: { id:1, name:'A'} }],
-    orders: []
+    books: [{ id: 1, title: 'T', year: 2020, price: 10, authorId: 1, author: { id:1, name:'A'} }]
   };
   return {
     prisma: {
