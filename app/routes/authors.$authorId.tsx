@@ -1,9 +1,14 @@
 // app/routes/authors.$authorId.tsx
-import { json } from "@remix-run/node";
+import { json, type LoaderFunctionArgs } from "@remix-run/node";
+type Book = {
+  id: number;
+  title: string;
+  year: number;
+};
 import { useLoaderData } from "@remix-run/react";
 import { prisma } from "~/lib/prisma.server";
 
-export async function loader({ params }: any) {
+export async function loader({ params }: LoaderFunctionArgs) {
   const author = await prisma.author.findUnique({
     where: { id: Number(params.authorId) },
     include: { books: true },
@@ -25,7 +30,7 @@ export default function AuthorDetailPage() {
       <h2 className="text-lg font-semibold">Books:</h2>
       <ul className="space-y-2">
         {author.books.length === 0 && <p>No books found for this author.</p>}
-        {author.books.map((book) => (
+        {author.books.map((book: Book) => (
           <li key={book.id} className="border p-3 rounded">
             {book.title} ({book.year})
           </li>

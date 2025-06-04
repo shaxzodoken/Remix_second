@@ -3,6 +3,10 @@ import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import { prisma } from "~/lib/prisma.server";
 import { Button } from "~/components/ui/button";
+type Author = {
+  id: number;
+  name: string;
+};
 
 export async function loader() {
   const authors = await prisma.author.findMany({
@@ -24,7 +28,7 @@ export default function AuthorsPage() {
       </div>
 
       <ul className="space-y-3">
-        {authors.map((author) => (
+        {authors.map((author: Author) => (
           <li key={author.id} className="border p-4 rounded">
             <Link to={`/authors/${author.id}`} className="font-semibold hover:underline">
               {author.name}

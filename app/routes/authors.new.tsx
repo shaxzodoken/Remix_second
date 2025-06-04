@@ -1,11 +1,11 @@
 // app/routes/authors.new.tsx
-import { json, redirect } from "@remix-run/node";
+import { json, redirect, type ActionFunctionArgs } from "@remix-run/node";
 import { Form } from "@remix-run/react";
 import { prisma } from "~/lib/prisma.server";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 
-export async function action({ request }: any) {
+export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
   const name = formData.get("name");
 
