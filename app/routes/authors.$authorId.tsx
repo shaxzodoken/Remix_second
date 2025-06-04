@@ -25,7 +25,7 @@ export default function AuthorDetailPage() {
       <h2 className="text-lg font-semibold">Books:</h2>
       <ul className="space-y-2">
         {author.books.length === 0 && <p>No books found for this author.</p>}
-        {author.books.map((book) => (
+        {author.books.map((book: typeof author.books[number]) => (
           <li key={book.id} className="border p-3 rounded">
             {book.title} ({book.year})
           </li>

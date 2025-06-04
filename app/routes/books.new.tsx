@@ -61,7 +61,7 @@ export default function NewBookPage() {
               <Label htmlFor="authorId">Muallif</Label>
               <select name="authorId" id="authorId" className="w-full border rounded p-2" required>
                 <option value="">Muallifni tanlang</option>
-                {authors.map((author) => (
+                {authors.map((author: typeof authors[number]) => (
                   <option key={author.id} value={author.id}>
                     {author.name}
                   </option>

@@ -29,7 +29,7 @@ export default function BooksPage() {
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-        {books.map((book) => (
+        {books.map((book: typeof books[number]) => (
           <Card key={book.id}>
             <CardHeader>
               <CardTitle className="text-xl font-semibold">{book.title}</CardTitle>

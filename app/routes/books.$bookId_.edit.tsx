@@ -65,7 +65,7 @@ export default function EditBookPage() {
                 required
               >
                 <option value="">Select Author</option>
-                {authors.map((author) => (
+                {authors.map((author: typeof authors[number]) => (
                   <option key={author.id} value={author.id}>
                     {author.name}
                   </option>

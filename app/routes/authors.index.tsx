@@ -24,7 +24,7 @@ export default function AuthorsPage() {
       </div>
 
       <ul className="space-y-3">
-        {authors.map((author) => (
+        {authors.map((author: typeof authors[number]) => (
           <li key={author.id} className="border p-4 rounded">
             <Link to={`/authors/${author.id}`} className="font-semibold hover:underline">
               {author.name}
