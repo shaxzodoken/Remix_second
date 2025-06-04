@@ -1,15 +1,21 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 
+vi.mock('~/utils/session.server', () => ({
+  requireUserId: vi.fn(async () => 1)
+}));
+
 vi.mock('~/lib/prisma.server', () => {
   const data = {
     authors: [{ id: 1, name: 'A' }],
-    books: [{ id: 1, title: 'T', year: 2020, authorId: 1, author: { id:1, name:'A'} }]
+    books: [{ id: 1, title: 'T', year: 2020, price: 10, authorId: 1, author: { id:1, name:'A'} }],
+    orders: []
   };
   return {
     prisma: {
       author: {
         findMany: vi.fn(async () => data.authors),
+        count: vi.fn(async () => data.authors.length),
         create: vi.fn(async ({ data: { name } }: any) => {
           const id = data.authors.length + 1;
           const author = { id, name };
@@ -19,12 +25,16 @@ vi.mock('~/lib/prisma.server', () => {
       },
       book: {
         findMany: vi.fn(async () => data.books),
+        count: vi.fn(async () => data.books.length),
         create: vi.fn(async ({ data: bookData }: any) => {
           const id = data.books.length + 1;
           const book = { id, ...bookData };
           data.books.push(book);
           return book;
         })
+      },
+      order: {
+        count: vi.fn(async () => data.orders.length)
       }
     }
   };
@@ -91,7 +101,7 @@ describe('books loader', () => {
 describe('books page', () => {
   it('renders list', async () => {
     const react = require('@remix-run/react');
-    vi.spyOn(react, 'useLoaderData').mockReturnValue({ books: [{ id: 1, title: 'R', year: 2021, author: { name: 'A' } }] } as any);
+    vi.spyOn(react, 'useLoaderData').mockReturnValue({ books: [{ id: 1, title: 'R', year: 2021, price: 5, author: { name: 'A' } }] } as any);
     const mod = await import('~/routes/books.index');
     const Page = mod.default;
     const router = require('react-router-dom').createMemoryRouter([
@@ -110,10 +120,21 @@ describe('create book action', () => {
     const action = mod.action;
     const req = new Request('http://test', {
       method: 'POST',
-      body: new URLSearchParams({ title: 'Book', year: '2024', authorId: '1' }).toString(),
+      body: new URLSearchParams({ title: 'Book', year: '2024', price: '9.99', authorId: '1' }).toString(),
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     });
     await action({ request: req } as any);
     expect(prisma.book.create).toHaveBeenCalled();
+  });
+});
+
+describe('dashboard loader', () => {
+  it('returns counts', async () => {
+    const { loader } = await import('~/routes/dashboard');
+    const res = await loader({ request: new Request('http://test') } as any);
+    const data = await res.json();
+    expect(typeof data.books).toBe('number');
+    expect(typeof data.authors).toBe('number');
+    expect(typeof data.orders).toBe('number');
   });
 });

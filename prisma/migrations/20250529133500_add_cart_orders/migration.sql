@@ -1,0 +1,25 @@
+-- Add price column to Book
+ALTER TABLE "Book" ADD COLUMN "price" DOUBLE PRECISION NOT NULL DEFAULT 0;
+
+-- Create Order table
+CREATE TABLE "Order" (
+  "id" SERIAL NOT NULL,
+  "userId" INTEGER NOT NULL,
+  "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT "Order_pkey" PRIMARY KEY ("id")
+);
+
+-- Create OrderItem table
+CREATE TABLE "OrderItem" (
+  "id" SERIAL NOT NULL,
+  "orderId" INTEGER NOT NULL,
+  "bookId" INTEGER NOT NULL,
+  "quantity" INTEGER NOT NULL DEFAULT 1,
+  "price" DOUBLE PRECISION NOT NULL,
+  CONSTRAINT "OrderItem_pkey" PRIMARY KEY ("id")
+);
+
+-- Add Foreign Keys
+ALTER TABLE "Order" ADD CONSTRAINT "Order_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "OrderItem" ADD CONSTRAINT "OrderItem_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "Order"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "OrderItem" ADD CONSTRAINT "OrderItem_bookId_fkey" FOREIGN KEY ("bookId") REFERENCES "Book"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -18,8 +18,27 @@ model Book {
   id       Int    @id @default(autoincrement())
   title    String
   year     Int
+  price    Float
   authorId Int
   author   Author @relation(fields: [authorId], references: [id])
+}
+
+model Order {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id])
+  createdAt DateTime  @default(now())
+  items     OrderItem[]
+}
+
+model OrderItem {
+  id       Int   @id @default(autoincrement())
+  orderId  Int
+  bookId   Int
+  quantity Int   @default(1)
+  price    Float
+  order    Order @relation(fields: [orderId], references: [id])
+  book     Book  @relation(fields: [bookId], references: [id])
 }
 
 model User {
