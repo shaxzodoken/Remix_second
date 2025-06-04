@@ -8,13 +8,16 @@ export default function Navbar({ user }: NavbarProps) {
   const location = useLocation();
   const currentPath = location.pathname;
 
-  const navItems = [
+  const baseItems = [
+    { path: "/", label: "Home" },
     { path: "/books", label: "Books" },
     { path: "/authors", label: "Authors" },
     { path: "/cart", label: "Cart" },
     { path: "/orders", label: "Orders" },
-    { path: "/", label: "Home" },
   ];
+  const navItems = user
+    ? [{ path: "/dashboard", label: "Dashboard" }, ...baseItems]
+    : baseItems;
 
   return (
     <nav className="bg-gray-900 text-white px-6 py-4 shadow">

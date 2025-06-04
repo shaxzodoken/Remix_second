@@ -1,6 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 
+vi.mock('~/utils/session.server', () => ({
+  requireUserId: vi.fn(async () => 1)
+}));
+
 vi.mock('~/lib/prisma.server', () => {
   const data = {
     authors: [{ id: 1, name: 'A' }],
@@ -10,6 +14,7 @@ vi.mock('~/lib/prisma.server', () => {
     prisma: {
       author: {
         findMany: vi.fn(async () => data.authors),
+        count: vi.fn(async () => data.authors.length),
         create: vi.fn(async ({ data: { name } }: any) => {
           const id = data.authors.length + 1;
           const author = { id, name };
@@ -19,12 +24,16 @@ vi.mock('~/lib/prisma.server', () => {
       },
       book: {
         findMany: vi.fn(async () => data.books),
+        count: vi.fn(async () => data.books.length),
         create: vi.fn(async ({ data: bookData }: any) => {
           const id = data.books.length + 1;
           const book = { id, ...bookData };
           data.books.push(book);
           return book;
         })
+      },
+      order: {
+        count: vi.fn(async () => data.orders.length)
       }
     }
   };
@@ -115,5 +124,16 @@ describe('create book action', () => {
     });
     await action({ request: req } as any);
     expect(prisma.book.create).toHaveBeenCalled();
+  });
+});
+
+describe('dashboard loader', () => {
+  it('returns counts', async () => {
+    const { loader } = await import('~/routes/dashboard');
+    const res = await loader({ request: new Request('http://test') } as any);
+    const data = await res.json();
+    expect(typeof data.books).toBe('number');
+    expect(typeof data.authors).toBe('number');
+    expect(typeof data.orders).toBe('number');
   });
 });

@@ -3,6 +3,7 @@ import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import { prisma } from "~/lib/prisma.server";
 import { Button } from "~/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 type Author = {
   id: number;
   name: string;
@@ -19,23 +20,28 @@ export default function AuthorsPage() {
   const { authors } = useLoaderData<typeof loader>();
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="mx-auto max-w-4xl space-y-6 p-6">
+      <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Authors</h1>
         <Link to="/authors/new">
           <Button>+ Add Author</Button>
         </Link>
       </div>
 
-      <ul className="space-y-3">
+      <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
         {authors.map((author: Author) => (
-          <li key={author.id} className="border p-4 rounded">
-            <Link to={`/authors/${author.id}`} className="font-semibold hover:underline">
-              {author.name}
-            </Link>
-          </li>
+          <Card key={author.id}>
+            <CardHeader>
+              <CardTitle>{author.name}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Link to={`/authors/${author.id}`} className="text-sm text-blue-600 hover:underline">
+                View Books
+              </Link>
+            </CardContent>
+          </Card>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
